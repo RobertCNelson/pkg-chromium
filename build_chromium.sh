@@ -331,7 +331,7 @@ build_chrome () {
 }
 
 package_chrome () {
-	pkgdir="/opt/chrome-src/chromium-${chrome_version}"
+	pkgdir="/opt/chrome-src/chromium-${chrome_version}-armhf"
 	sudo mkdir -p $pkgdir || true
 	cd /opt/chrome-src/src/
 
