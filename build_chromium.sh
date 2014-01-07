@@ -20,6 +20,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+DIR=$PWD
+
 #http://gsdview.appspot.com/chromium-browser-official/
 chrome_version="31.0.1650.69"
 unset use_testing
@@ -343,7 +345,10 @@ package_chrome () {
 	for size in 16 32; do
 		install -Dm644 "chrome/app/theme/default_100_percent/chromium/product_logo_$size.png" "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps/chromium.png"
 	done
-	#install -D "chromium.sh" "$pkgdir/usr/bin/chromium"
+
+	install -D "${DIR}/3rdparty/chromium" "$pkgdir/usr/bin/chromium"
+	install -Dm644 "${DIR}/3rdparty/default" "$pkgdir/etc/chromium/default"
+	install -Dm644 "${DIR}/3rdparty/chromium.desktop" "$pkgdir/usr/share/applications/chromium.desktop"
 }
 
 check_dependencies
