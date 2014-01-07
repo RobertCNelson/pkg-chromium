@@ -335,6 +335,7 @@ package_chrome () {
 	sudo mkdir -p $pkgdir || true
 	cd /opt/chrome-src/src/
 
+	sudo strip --strip-unneeded out/Release/chrome
 	sudo install -D out/Release/chrome "$pkgdir/usr/lib/chromium/chromium"
 
 	sudo install -Dm4755 -o root -g root out/Release/chrome_sandbox "$pkgdir/usr/lib/chromium/chrome-sandbox"
