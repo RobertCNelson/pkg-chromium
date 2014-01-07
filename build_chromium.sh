@@ -203,6 +203,9 @@ set_testing_defines () {
 
 	# Use pulseaudio
 	GYP_DEFINES="${GYP_DEFINES} use_pulseaudio=1"
+
+	# strip binary
+	GYP_DEFINES="${GYP_DEFINES} linux_strip_binary=1"
 }
 
 set_stable_defines () {
@@ -295,6 +298,10 @@ set_stable_defines () {
 
 	# Use pulseaudio
 	GYP_DEFINES="${GYP_DEFINES} use_pulseaudio=1"
+
+	# strip binary
+	#-rwxr-xr-x  1 voodoo voodoo 123M Jan  7 14:02 chrome (before)
+	GYP_DEFINES="${GYP_DEFINES} linux_strip_binary=1"
 }
 
 dl_chrome () {
