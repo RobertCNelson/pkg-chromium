@@ -357,6 +357,12 @@ package_chrome () {
 	sudo install -D "${DIR}/3rdparty/chromium" "$pkgdir/usr/bin/chromium"
 	sudo install -Dm644 "${DIR}/3rdparty/default" "$pkgdir/etc/chromium/default"
 	sudo install -Dm644 "${DIR}/3rdparty/chromium.desktop" "$pkgdir/usr/share/applications/chromium.desktop"
+
+	cd $pkgdir
+	sudo LANG=C tar --numeric-owner -cf /opt/chrome-src/chromium-${chrome_version}-${deb_arch}.tar .
+	cd /opt/chrome-src/
+	sudo chown -R $USER:$USER /opt/chrome-src/chromium-${chrome_version}-${deb_arch}.tar
+	xz -z -7 -v chromium-${chrome_version}-${deb_arch}.tar
 }
 
 check_dependencies
