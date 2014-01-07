@@ -325,30 +325,30 @@ build_chrome () {
 
 package_chrome () {
 	pkgdir="/opt/chrome-src/chromium-${chrome_version}"
-	mkdir -p $pkgdir || true
+	sudo mkdir -p $pkgdir || true
 	cd /opt/chrome-src/src/
 
-	install -D out/Release/chrome "$pkgdir/usr/lib/chromium/chromium"
+	sudo install -D out/Release/chrome "$pkgdir/usr/lib/chromium/chromium"
 
-	install -Dm4755 -o root -g root out/Release/chrome_sandbox "$pkgdir/usr/lib/chromium/chrome-sandbox"
+	sudo install -Dm4755 -o root -g root out/Release/chrome_sandbox "$pkgdir/usr/lib/chromium/chrome-sandbox"
 
-	cp out/Release/{*.pak,libffmpegsumo.so} "$pkgdir/usr/lib/chromium/"
+	sudo cp out/Release/{*.pak,libffmpegsumo.so} "$pkgdir/usr/lib/chromium/"
 
-	cp -a out/Release/locales "$pkgdir/usr/lib/chromium/"
+	sudo cp -a out/Release/locales "$pkgdir/usr/lib/chromium/"
 
-	install -Dm644 out/Release/chrome.1 "$pkgdir/usr/share/man/man1/chromium.1"
+	sudo install -Dm644 out/Release/chrome.1 "$pkgdir/usr/share/man/man1/chromium.1"
 
 	for size in 22 24 48 64 128 256; do
-		install -Dm644 "chrome/app/theme/chromium/product_logo_$size.png" "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps/chromium.png"
+		sudo install -Dm644 "chrome/app/theme/chromium/product_logo_$size.png" "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps/chromium.png"
 	done
 
 	for size in 16 32; do
-		install -Dm644 "chrome/app/theme/default_100_percent/chromium/product_logo_$size.png" "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps/chromium.png"
+		sudo install -Dm644 "chrome/app/theme/default_100_percent/chromium/product_logo_$size.png" "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps/chromium.png"
 	done
 
-	install -D "${DIR}/3rdparty/chromium" "$pkgdir/usr/bin/chromium"
-	install -Dm644 "${DIR}/3rdparty/default" "$pkgdir/etc/chromium/default"
-	install -Dm644 "${DIR}/3rdparty/chromium.desktop" "$pkgdir/usr/share/applications/chromium.desktop"
+	sudo install -D "${DIR}/3rdparty/chromium" "$pkgdir/usr/bin/chromium"
+	sudo install -Dm644 "${DIR}/3rdparty/default" "$pkgdir/etc/chromium/default"
+	sudo install -Dm644 "${DIR}/3rdparty/chromium.desktop" "$pkgdir/usr/share/applications/chromium.desktop"
 }
 
 check_dependencies
