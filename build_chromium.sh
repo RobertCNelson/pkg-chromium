@@ -334,23 +334,24 @@ package_chrome () {
 	sudo mkdir -p $pkgdir || true
 	cd /opt/chrome-src/src/
 
-	sudo strip --strip-unneeded out/Release/chrome
-	sudo install -D out/Release/chrome "$pkgdir/usr/lib/chromium/chromium"
+	sudo strip --strip-unneeded /opt/chrome-src/src/out/Release/chrome
+	sudo install -D /opt/chrome-src/src/out/Release/chrome "$pkgdir/usr/lib/chromium/chromium"
 
-	sudo install -Dm4755 -o root -g root out/Release/chrome_sandbox "$pkgdir/usr/lib/chromium/chrome-sandbox"
+	sudo install -Dm4755 -o root -g root /opt/chrome-src/src/out/Release/chrome_sandbox "$pkgdir/usr/lib/chromium/chrome-sandbox"
 
-	sudo cp out/Release/{*.pak,libffmpegsumo.so} "$pkgdir/usr/lib/chromium/"
+	sudo cp /opt/chrome-src/src/out/Release/*.pak "$pkgdir/usr/lib/chromium/"
+	sudo cp /opt/chrome-src/src/out/Release/libffmpegsumo.so "$pkgdir/usr/lib/chromium/"
 
-	sudo cp -a out/Release/locales "$pkgdir/usr/lib/chromium/"
+	sudo cp -a /opt/chrome-src/src/out/Release/locales "$pkgdir/usr/lib/chromium/"
 
-	sudo install -Dm644 out/Release/chrome.1 "$pkgdir/usr/share/man/man1/chromium.1"
+	sudo install -Dm644 /opt/chrome-src/src/out/Release/chrome.1 "$pkgdir/usr/share/man/man1/chromium.1"
 
 	for size in 22 24 48 64 128 256; do
-		sudo install -Dm644 "chrome/app/theme/chromium/product_logo_$size.png" "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps/chromium.png"
+		sudo install -Dm644 "/opt/chrome-src/src/chrome/app/theme/chromium/product_logo_$size.png" "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps/chromium.png"
 	done
 
 	for size in 16 32; do
-		sudo install -Dm644 "chrome/app/theme/default_100_percent/chromium/product_logo_$size.png" "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps/chromium.png"
+		sudo install -Dm644 "/opt/chrome-src/src/chrome/app/theme/default_100_percent/chromium/product_logo_$size.png" "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps/chromium.png"
 	done
 
 	sudo install -D "${DIR}/3rdparty/chromium" "$pkgdir/usr/bin/chromium"
