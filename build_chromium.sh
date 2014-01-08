@@ -320,6 +320,13 @@ dl_chrome () {
 
 patch_chrome () {
 	cd /opt/chrome-src/src/
+
+	#https://code.launchpad.net/~chromium-team/chromium-browser/trusty-working
+	patch -p1 < "${DIR}/patches/arm-crypto.patch"
+	patch -p2 < "${DIR}/patches/title-bar-default-system.patch"
+	patch -p2 < "${DIR}/patches/third-party-cookies-off-by-default.patch"
+	patch -p2 < "${DIR}/patches/arm.patch"
+
 	#patch -p2 < "${DIR}/patches/arm-webrtc-fix.patch"
 	patch -p0 < "${DIR}/patches/skia.patch"
 }

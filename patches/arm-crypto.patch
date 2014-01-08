@@ -1,0 +1,16 @@
+diff --git a/crypto/nss_util.cc b/crypto/nss_util.cc
+index 80191b3..b0dddc5 100644
+--- a/crypto/nss_util.cc
++++ b/crypto/nss_util.cc
+@@ -656,7 +656,11 @@ void LoadNSSLibraries() {
+ #elif defined(ARCH_CPU_X86)
+   paths.push_back(base::FilePath("/usr/lib/i386-linux-gnu/nss"));
+ #elif defined(ARCH_CPU_ARMEL)
++# ifdef __ARM_PCS_VFP
++  paths.push_back(base::FilePath("/usr/lib/arm-linux-gnueabihf/nss"));
++# else
+   paths.push_back(base::FilePath("/usr/lib/arm-linux-gnueabi/nss"));
++# endif
+ #elif defined(ARCH_CPU_MIPSEL)
+   paths.push_back(base::FilePath("/usr/lib/mipsel-linux-gnu/nss"));
+ #endif
