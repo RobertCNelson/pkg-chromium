@@ -150,7 +150,7 @@ set_testing_defines () {
 
 	GYP_DEFINES="${GYP_DEFINES} disable_nacl=1"
 	GYP_DEFINES="${GYP_DEFINES} linux_use_tcmalloc=0"
-	GYP_DEFINES="${GYP_DEFINES} enable_webrtc=0"
+	GYP_DEFINES="${GYP_DEFINES} enable_webrtc=1"
 	GYP_DEFINES="${GYP_DEFINES} use_cups=1"
 
 	if [ "x${deb_arch}" = "xarmhf" ] ; then
@@ -245,7 +245,7 @@ set_stable_defines () {
 
 	GYP_DEFINES="${GYP_DEFINES} disable_nacl=1"
 	GYP_DEFINES="${GYP_DEFINES} linux_use_tcmalloc=0"
-	GYP_DEFINES="${GYP_DEFINES} enable_webrtc=0"
+	GYP_DEFINES="${GYP_DEFINES} enable_webrtc=1"
 	GYP_DEFINES="${GYP_DEFINES} use_cups=1"
 
 	if [ "x${deb_arch}" = "xarmhf" ] ; then
@@ -318,12 +318,16 @@ dl_chrome () {
 	mv /opt/chrome-src/chromium-${chrome_version} /opt/chrome-src/src/
 }
 
+patch_chrome () {
+	cd /opt/chrome-src/src/
+	patch -p2 < "${DIR}/patches/arm-webrtc-fix.patch"
+	patch -p0 < "${DIR}/patches/skia.patch"
+}
+
 build_chrome () {
 	cd /opt/chrome-src/src/
 	echo "Building with: [${GYP_DEFINES}]"
 	export GYP_DEFINES="${GYP_DEFINES}"
-
-	patch -p0 < "${DIR}/patches/skia.patch"
 
 	./build/gyp_chromium
 	ninja -C out/Release chrome chrome_sandbox
@@ -376,6 +380,7 @@ else
 	set_stable_defines
 fi
 dl_chrome
+patch_chrome
 build_chrome
 if [ -f /opt/chrome-src/src/out/Release/chrome ] ; then
 	package_chrome
