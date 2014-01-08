@@ -322,6 +322,9 @@ build_chrome () {
 	cd /opt/chrome-src/src/
 	echo "Building with: [${GYP_DEFINES}]"
 	export GYP_DEFINES="${GYP_DEFINES}"
+
+	patch -p0 < "${DIR}/patches/skia.patch"
+
 	./build/gyp_chromium
 	ninja -C out/Release chrome chrome_sandbox
 	#test via:
