@@ -376,6 +376,15 @@ package_chrome () {
 	cd $pkgdir
 	sudo LANG=C tar --numeric-owner -cf /opt/chrome-src/chromium-${chrome_version}-${deb_arch}.tar .
 	cd /opt/chrome-src/
+
+	if [ -f /opt/chrome-src/chromium-${chrome_version}-${deb_arch}.tar ] ; then
+		rm -f /opt/chrome-src/chromium-${chrome_version}-${deb_arch}.tar || true
+	fi
+
+	if [ -f /opt/chrome-src/chromium-${chrome_version}-${deb_arch}.tar.xz ] ; then
+		rm -f /opt/chrome-src/chromium-${chrome_version}-${deb_arch}.tar.zx || true
+	fi
+
 	sudo chown -R $USER:$USER /opt/chrome-src/chromium-${chrome_version}-${deb_arch}.tar
 	xz -z -7 -v chromium-${chrome_version}-${deb_arch}.tar
 }
