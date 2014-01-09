@@ -354,7 +354,7 @@ package_chrome () {
 		sudo rm -f /opt/chrome-src/chromium-${chrome_version}-${deb_arch}.tar.xz || true
 	fi
 
-	if [ -f /opt/chrome-src/chromium-${chrome_version}-${deb_arch}-${testing_label}.tar.xz
+	if [ -f /opt/chrome-src/chromium-${chrome_version}-${deb_arch}-${testing_label}.tar.xz ] ; then
 		sudo rm -f /opt/chrome-src/chromium-${chrome_version}-${deb_arch}-${testing_label}.tar.xz || true
 	fi
 
