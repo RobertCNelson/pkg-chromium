@@ -339,6 +339,19 @@ build_chrome () {
 	echo "Building with: [${GYP_DEFINES}]"
 	export GYP_DEFINES="${GYP_DEFINES}"
 
+	deb_distro=$(lsb_release -cs | sed 's/\//_/g')
+	case "${deb_distro}" in
+	wheezy)
+	if [ -f ${DIR}/testing ] ; then
+		export CXX=g++-4.7
+		export CC=gcc-4.7
+
+		export CXX_host=g++-4.7
+		export CC_host=gcc-4.7
+	fi
+		;;
+	esac
+
 	./build/gyp_chromium
 	ninja -C out/Release chrome chrome_sandbox
 	#test via:
