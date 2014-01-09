@@ -28,7 +28,7 @@ unset use_testing
 if [ -f ${DIR}/testing ] ; then
 	#chrome_version="32.0.1700.69"
 	use_testing=enable
-	testing_label="no-system-libs-arm_neon"
+	testing_label="xyz"
 fi
 
 check_dpkg () {
@@ -255,11 +255,12 @@ set_stable_defines () {
 		GYP_DEFINES="${GYP_DEFINES} target_arch=arm"
 		GYP_DEFINES="${GYP_DEFINES} -DUSE_EABI_HARDFLOAT"
 		GYP_DEFINES="${GYP_DEFINES} v8_use_arm_eabi_hardfloat=true"
-		GYP_DEFINES="${GYP_DEFINES} arm_fpu=vfpv3"
+		#GYP_DEFINES="${GYP_DEFINES} arm_fpu=vfpv3"
+		GYP_DEFINES="${GYP_DEFINES} arm_fpu=neon"
 		GYP_DEFINES="${GYP_DEFINES} arm_float_abi=hard"
-		GYP_DEFINES="${GYP_DEFINES} arm_thumb=1"
+		GYP_DEFINES="${GYP_DEFINES} arm_thumb=0"
 		GYP_DEFINES="${GYP_DEFINES} armv7=1"
-		GYP_DEFINES="${GYP_DEFINES} arm_neon=0"
+		GYP_DEFINES="${GYP_DEFINES} arm_neon=1"
 	fi
 
 	GYP_DEFINES="${GYP_DEFINES} library=shared_library"
@@ -277,26 +278,26 @@ set_stable_defines () {
 	#$USE_SYSTEM_LIBWEBP := $(shell pkg-config 'libwebp >= 0.3.0' && echo 1 || echo 0)
 	#USE_SYSTEM_LIBWEBP := 0
 
-	# System libs
-	GYP_DEFINES="${GYP_DEFINES} use_system_bzip2=1"
-	GYP_DEFINES="${GYP_DEFINES} use_system_libjpeg=1"
-	GYP_DEFINES="${GYP_DEFINES} use_system_libpng=1"
-	#sqlite3 >= 3.6.1
-	#fails with jessie: 31.0.1650.69
-	#GYP_DEFINES="${GYP_DEFINES} use_system_sqlite=1"
-	GYP_DEFINES="${GYP_DEFINES} use_system_libxml=1"
-	GYP_DEFINES="${GYP_DEFINES} use_system_libxslt=1"
-	GYP_DEFINES="${GYP_DEFINES} use_system_zlib=1"
-	GYP_DEFINES="${GYP_DEFINES} use_system_libevent=1"
-	GYP_DEFINES="${GYP_DEFINES} use_system_icu=0"
-	GYP_DEFINES="${GYP_DEFINES} use_system_yasm=1"
-	#GYP_DEFINES="${GYP_DEFINES} use_system_ffmpeg=$(USE_SYSTEM_FFMPEG)"
-	GYP_DEFINES="${GYP_DEFINES} use_system_libvpx=1"
-	GYP_DEFINES="${GYP_DEFINES} use_system_xdg_utils=1"
-	GYP_DEFINES="${GYP_DEFINES} use_system_flac=1"
-	#GYP_DEFINES="${GYP_DEFINES} use_system_libwebp=$(USE_SYSTEM_LIBWEBP)"
-	GYP_DEFINES="${GYP_DEFINES} use_system_speex=1"
-	GYP_DEFINES="${GYP_DEFINES} linux_link_libspeechd=1"
+	## System libs
+	#GYP_DEFINES="${GYP_DEFINES} use_system_bzip2=1"
+	#GYP_DEFINES="${GYP_DEFINES} use_system_libjpeg=1"
+	#GYP_DEFINES="${GYP_DEFINES} use_system_libpng=1"
+	##sqlite3 >= 3.6.1
+	##fails with jessie: 31.0.1650.69
+	##GYP_DEFINES="${GYP_DEFINES} use_system_sqlite=1"
+	#GYP_DEFINES="${GYP_DEFINES} use_system_libxml=1"
+	#GYP_DEFINES="${GYP_DEFINES} use_system_libxslt=1"
+	#GYP_DEFINES="${GYP_DEFINES} use_system_zlib=1"
+	#GYP_DEFINES="${GYP_DEFINES} use_system_libevent=1"
+	#GYP_DEFINES="${GYP_DEFINES} use_system_icu=0"
+	#GYP_DEFINES="${GYP_DEFINES} use_system_yasm=1"
+	##GYP_DEFINES="${GYP_DEFINES} use_system_ffmpeg=$(USE_SYSTEM_FFMPEG)"
+	#GYP_DEFINES="${GYP_DEFINES} use_system_libvpx=1"
+	#GYP_DEFINES="${GYP_DEFINES} use_system_xdg_utils=1"
+	#GYP_DEFINES="${GYP_DEFINES} use_system_flac=1"
+	##GYP_DEFINES="${GYP_DEFINES} use_system_libwebp=$(USE_SYSTEM_LIBWEBP)"
+	#GYP_DEFINES="${GYP_DEFINES} use_system_speex=1"
+	#GYP_DEFINES="${GYP_DEFINES} linux_link_libspeechd=1"
 
 	# Use pulseaudio
 	GYP_DEFINES="${GYP_DEFINES} use_pulseaudio=1"
