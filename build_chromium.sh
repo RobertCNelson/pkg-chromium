@@ -159,9 +159,10 @@ set_testing_defines () {
 		GYP_DEFINES="${GYP_DEFINES} target_arch=arm"
 		GYP_DEFINES="${GYP_DEFINES} -DUSE_EABI_HARDFLOAT"
 		GYP_DEFINES="${GYP_DEFINES} v8_use_arm_eabi_hardfloat=true"
-		GYP_DEFINES="${GYP_DEFINES} arm_fpu=vfpv3"
+		#GYP_DEFINES="${GYP_DEFINES} arm_fpu=vfpv3"
+		GYP_DEFINES="${GYP_DEFINES} arm_fpu=neon"
 		GYP_DEFINES="${GYP_DEFINES} arm_float_abi=hard"
-		GYP_DEFINES="${GYP_DEFINES} arm_thumb=1"
+		GYP_DEFINES="${GYP_DEFINES} arm_thumb=0"
 		GYP_DEFINES="${GYP_DEFINES} armv7=1"
 		GYP_DEFINES="${GYP_DEFINES} arm_neon=1"
 	fi
