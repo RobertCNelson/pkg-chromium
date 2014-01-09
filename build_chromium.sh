@@ -25,16 +25,17 @@ DIR=$PWD
 #http://gsdview.appspot.com/chromium-browser-official/
 chrome_version="31.0.1650.69"
 unset use_testing
-if [ -f testing ] ; then
-	chrome_version="32.0.1700.69"
+if [ -f ${DIR}/testing ] ; then
+	#chrome_version="32.0.1700.69"
 	use_testing=enable
+	testing_label="no-system-libs"
 fi
 
 check_dpkg () {
 	LC_ALL=C dpkg --list | awk '{print $2}' | grep "^${pkg}$" >/dev/null || deb_pkgs="${deb_pkgs}${pkg} "
 }
 
-check_dependencies() {
+check_dependencies () {
 	unset deb_pkgs
 	pkg="bison"
 	check_dpkg
@@ -181,25 +182,25 @@ set_testing_defines () {
 	#USE_SYSTEM_LIBWEBP := 0
 
 	# System libs
-	GYP_DEFINES="${GYP_DEFINES} use_system_bzip2=1"
-	GYP_DEFINES="${GYP_DEFINES} use_system_libjpeg=1"
-	GYP_DEFINES="${GYP_DEFINES} use_system_libpng=1"
+	#GYP_DEFINES="${GYP_DEFINES} use_system_bzip2=1"
+	#GYP_DEFINES="${GYP_DEFINES} use_system_libjpeg=1"
+	#GYP_DEFINES="${GYP_DEFINES} use_system_libpng=1"
 	#sqlite3 >= 3.6.1
 	#fails with jessie: 31.0.1650.69
 	#GYP_DEFINES="${GYP_DEFINES} use_system_sqlite=1"
-	GYP_DEFINES="${GYP_DEFINES} use_system_libxml=1"
-	GYP_DEFINES="${GYP_DEFINES} use_system_libxslt=1"
-	GYP_DEFINES="${GYP_DEFINES} use_system_zlib=1"
-	GYP_DEFINES="${GYP_DEFINES} use_system_libevent=1"
-	GYP_DEFINES="${GYP_DEFINES} use_system_icu=0"
-	GYP_DEFINES="${GYP_DEFINES} use_system_yasm=1"
+	#GYP_DEFINES="${GYP_DEFINES} use_system_libxml=1"
+	#GYP_DEFINES="${GYP_DEFINES} use_system_libxslt=1"
+	#GYP_DEFINES="${GYP_DEFINES} use_system_zlib=1"
+	#GYP_DEFINES="${GYP_DEFINES} use_system_libevent=1"
+	#GYP_DEFINES="${GYP_DEFINES} use_system_icu=0"
+	#GYP_DEFINES="${GYP_DEFINES} use_system_yasm=1"
 	#GYP_DEFINES="${GYP_DEFINES} use_system_ffmpeg=$(USE_SYSTEM_FFMPEG)"
-	GYP_DEFINES="${GYP_DEFINES} use_system_libvpx=1"
-	GYP_DEFINES="${GYP_DEFINES} use_system_xdg_utils=1"
-	GYP_DEFINES="${GYP_DEFINES} use_system_flac=1"
+	#GYP_DEFINES="${GYP_DEFINES} use_system_libvpx=1"
+	#GYP_DEFINES="${GYP_DEFINES} use_system_xdg_utils=1"
+	#GYP_DEFINES="${GYP_DEFINES} use_system_flac=1"
 	#GYP_DEFINES="${GYP_DEFINES} use_system_libwebp=$(USE_SYSTEM_LIBWEBP)"
-	GYP_DEFINES="${GYP_DEFINES} use_system_speex=1"
-	GYP_DEFINES="${GYP_DEFINES} linux_link_libspeechd=1"
+	#GYP_DEFINES="${GYP_DEFINES} use_system_speex=1"
+	#GYP_DEFINES="${GYP_DEFINES} linux_link_libspeechd=1"
 
 	# Use pulseaudio
 	GYP_DEFINES="${GYP_DEFINES} use_pulseaudio=1"
@@ -323,7 +324,7 @@ patch_chrome () {
 
 	#https://code.launchpad.net/~chromium-team/chromium-browser/trusty-working
 	patch -p1 < "${DIR}/patches/arm-crypto.patch"
-	patch -p2 < "${DIR}/patches/title-bar-default-system.patch"
+	#patch -p2 < "${DIR}/patches/title-bar-default-system.patch"
 	patch -p2 < "${DIR}/patches/third-party-cookies-off-by-default.patch"
 	patch -p2 < "${DIR}/patches/arm.patch"
 
@@ -351,6 +352,10 @@ package_chrome () {
 
 	if [ -f /opt/chrome-src/chromium-${chrome_version}-${deb_arch}.tar.xz ] ; then
 		sudo rm -f /opt/chrome-src/chromium-${chrome_version}-${deb_arch}.tar.xz || true
+	fi
+
+	if [ -f /opt/chrome-src/chromium-${chrome_version}-${deb_arch}-${testing_label}.tar.xz
+		sudo rm -f /opt/chrome-src/chromium-${chrome_version}-${deb_arch}-${testing_label}.tar.xz || true
 	fi
 
 	pkgdir="/opt/chrome-src/chromium-${chrome_version}-${deb_arch}"
@@ -386,6 +391,10 @@ package_chrome () {
 	cd /opt/chrome-src/
 	sudo chown -R $USER:$USER /opt/chrome-src/chromium-${chrome_version}-${deb_arch}.tar
 	xz -z -7 -v chromium-${chrome_version}-${deb_arch}.tar
+
+	if [ "x${use_testing}" = "xenable" ] ; then
+		mv chromium-${chrome_version}-${deb_arch}.tar.xz chromium-${chrome_version}-${deb_arch}-${testing_label}.tar.xz
+	fi
 }
 
 check_dependencies
