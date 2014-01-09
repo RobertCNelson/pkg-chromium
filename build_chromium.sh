@@ -28,7 +28,7 @@ unset use_testing
 if [ -f ${DIR}/testing ] ; then
 	#chrome_version="32.0.1700.69"
 	use_testing=enable
-	testing_label="no-system-libs"
+	testing_label="no-system-libs-arm_neon"
 fi
 
 check_dpkg () {
@@ -163,7 +163,7 @@ set_testing_defines () {
 		GYP_DEFINES="${GYP_DEFINES} arm_float_abi=hard"
 		GYP_DEFINES="${GYP_DEFINES} arm_thumb=1"
 		GYP_DEFINES="${GYP_DEFINES} armv7=1"
-		GYP_DEFINES="${GYP_DEFINES} arm_neon=0"
+		GYP_DEFINES="${GYP_DEFINES} arm_neon=1"
 	fi
 
 	GYP_DEFINES="${GYP_DEFINES} library=shared_library"
