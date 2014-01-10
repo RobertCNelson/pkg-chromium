@@ -28,7 +28,7 @@ unset use_testing
 if [ -f ${DIR}/testing ] ; then
 	#chrome_version="32.0.1700.69"
 	use_testing=enable
-	testing_label="xyz"
+	testing_label="gcc-4.7"
 fi
 
 check_dpkg () {
