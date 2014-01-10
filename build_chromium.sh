@@ -83,6 +83,12 @@ check_dependencies () {
 	deb_distro=$(lsb_release -cs | sed 's/\//_/g')
 	case "${deb_distro}" in
 	wheezy)
+		#testing...
+		pkg="gcc-4.7"
+		check_dpkg
+		pkg="g++-4.7"
+		check_dpkg
+
 		pkg="libsqlite3-dev"
 		check_dpkg
 		pkg="libxslt1-dev"
