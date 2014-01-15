@@ -24,11 +24,13 @@ DIR=$PWD
 
 #http://gsdview.appspot.com/chromium-browser-official/
 chrome_version="31.0.1650.69"
+#chrome_version="32.0.1700.76"
 unset use_testing
 if [ -f ${DIR}/testing ] ; then
-	#chrome_version="32.0.1700.69"
+	chrome_version="32.0.1700.76"
+	#chrome_version="33.0.1750.27"
 	use_testing=enable
-	testing_label="gcc-4.7"
+	testing_label="new"
 fi
 
 check_dpkg () {
@@ -157,7 +159,7 @@ set_testing_defines () {
 
 	GYP_DEFINES="${GYP_DEFINES} disable_nacl=1"
 	GYP_DEFINES="${GYP_DEFINES} linux_use_tcmalloc=0"
-	GYP_DEFINES="${GYP_DEFINES} enable_webrtc=0"
+	GYP_DEFINES="${GYP_DEFINES} enable_webrtc=1"
 	GYP_DEFINES="${GYP_DEFINES} use_cups=1"
 
 	if [ "x${deb_arch}" = "xarmhf" ] ; then
@@ -337,7 +339,9 @@ patch_chrome () {
 	patch -p2 < "${DIR}/patches/arm.patch"
 
 	#patch -p2 < "${DIR}/patches/arm-webrtc-fix.patch"
+if [ ! -f ${DIR}/testing ] ; then
 	patch -p0 < "${DIR}/patches/skia.patch"
+fi
 }
 
 build_chrome () {
@@ -346,17 +350,17 @@ build_chrome () {
 	export GYP_DEFINES="${GYP_DEFINES}"
 
 	deb_distro=$(lsb_release -cs | sed 's/\//_/g')
-	case "${deb_distro}" in
-	wheezy)
-	if [ -f ${DIR}/testing ] ; then
-		export CXX=g++-4.7
-		export CC=gcc-4.7
-
-		export CXX_host=g++-4.7
-		export CC_host=gcc-4.7
-	fi
-		;;
-	esac
+	#case "${deb_distro}" in
+	#wheezy)
+	#if [ -f ${DIR}/testing ] ; then
+	#	export CXX=g++-4.7
+	#	export CC=gcc-4.7
+#
+	#	export CXX_host=g++-4.7
+	#	export CC_host=gcc-4.7
+	#fi
+	#	;;
+	#esac
 
 	./build/gyp_chromium
 	ninja -C out/Release chrome chrome_sandbox
