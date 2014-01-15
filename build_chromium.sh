@@ -85,11 +85,15 @@ check_dependencies () {
 	deb_distro=$(lsb_release -cs | sed 's/\//_/g')
 	case "${deb_distro}" in
 	wheezy)
+if [ -f ${DIR}/testing ] ; then
+		pkg="libdrm-dev"
+		check_dpkg
+fi
 		#testing...
-		pkg="gcc-4.7"
-		check_dpkg
-		pkg="g++-4.7"
-		check_dpkg
+		#pkg="gcc-4.7"
+		#check_dpkg
+		#pkg="g++-4.7"
+		#check_dpkg
 
 		pkg="libsqlite3-dev"
 		check_dpkg
@@ -105,6 +109,10 @@ check_dependencies () {
 		fi
 		;;
 	jessie|sid)
+if [ -f ${DIR}/testing ] ; then
+		pkg="libdrm-dev:${deb_arch}"
+		check_dpkg
+fi
 		pkg="libsqlite3-dev:${deb_arch}"
 		check_dpkg
 		pkg="libxslt1-dev:${deb_arch}"
