@@ -81,6 +81,10 @@ check_dependencies () {
 	check_dpkg
 	pkg="libxtst-dev:${deb_arch}"
 	check_dpkg
+if [ -f ${DIR}/testing ] ; then
+	pkg="libcap-dev:${deb_arch}"
+	check_dpkg
+fi
 
 	deb_distro=$(lsb_release -cs | sed 's/\//_/g')
 	case "${deb_distro}" in
