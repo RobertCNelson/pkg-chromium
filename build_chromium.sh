@@ -345,6 +345,10 @@ fi
 }
 
 build_chrome () {
+if [ -f ${DIR}/testing ] ; then
+	sudo mount -t tmpfs shmfs -o size=256M /dev/shm
+fi
+
 	cd /opt/chrome-src/src/
 	echo "Building with: [${GYP_DEFINES}]"
 	export GYP_DEFINES="${GYP_DEFINES}"
@@ -367,6 +371,9 @@ build_chrome () {
 	#test via:
 	#sudo chown root:root chrome_sandbox && sudo chmod 4755 chrome_sandbox && export CHROME_DEVEL_SANDBOX="$PWD/chrome_sandbox"
 	#./chrome
+if [ -f ${DIR}/testing ] ; then
+	sudo umount -l /dev/shm || true
+fi
 }
 
 package_chrome () {
