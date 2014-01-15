@@ -23,14 +23,13 @@
 DIR=$PWD
 
 #http://gsdview.appspot.com/chromium-browser-official/
-chrome_version="31.0.1650.69"
-#chrome_version="32.0.1700.76"
+#chrome_version="31.0.1650.69"
+chrome_version="32.0.1700.76"
 unset use_testing
 if [ -f ${DIR}/testing ] ; then
-	chrome_version="32.0.1700.76"
-	#chrome_version="33.0.1750.27"
+	chrome_version="33.0.1750.27"
 	use_testing=enable
-	testing_label="new"
+	testing_label="33"
 fi
 
 check_dpkg () {
@@ -81,18 +80,19 @@ check_dependencies () {
 	check_dpkg
 	pkg="libxtst-dev:${deb_arch}"
 	check_dpkg
-if [ -f ${DIR}/testing ] ; then
+
+	#chrome_version="32.0.1700.76"
 	pkg="libcap-dev:${deb_arch}"
 	check_dpkg
-fi
 
 	deb_distro=$(lsb_release -cs | sed 's/\//_/g')
 	case "${deb_distro}" in
 	wheezy)
-if [ -f ${DIR}/testing ] ; then
+
+		#chrome_version="32.0.1700.76"
 		pkg="libdrm-dev"
 		check_dpkg
-fi
+
 		#testing...
 		#pkg="gcc-4.7"
 		#check_dpkg
@@ -113,10 +113,10 @@ fi
 		fi
 		;;
 	jessie|sid)
-if [ -f ${DIR}/testing ] ; then
+		#chrome_version="32.0.1700.76"
 		pkg="libdrm-dev:${deb_arch}"
 		check_dpkg
-fi
+
 		pkg="libsqlite3-dev:${deb_arch}"
 		check_dpkg
 		pkg="libxslt1-dev:${deb_arch}"
@@ -267,7 +267,7 @@ set_stable_defines () {
 
 	GYP_DEFINES="${GYP_DEFINES} disable_nacl=1"
 	GYP_DEFINES="${GYP_DEFINES} linux_use_tcmalloc=0"
-	GYP_DEFINES="${GYP_DEFINES} enable_webrtc=0"
+	GYP_DEFINES="${GYP_DEFINES} enable_webrtc=1"
 	GYP_DEFINES="${GYP_DEFINES} use_cups=1"
 
 	if [ "x${deb_arch}" = "xarmhf" ] ; then
@@ -346,20 +346,16 @@ patch_chrome () {
 
 	#https://code.launchpad.net/~chromium-team/chromium-browser/trusty-working
 	patch -p1 < "${DIR}/patches/arm-crypto.patch"
-	#patch -p2 < "${DIR}/patches/title-bar-default-system.patch"
 	patch -p2 < "${DIR}/patches/third-party-cookies-off-by-default.patch"
 	patch -p2 < "${DIR}/patches/arm.patch"
 
-	#patch -p2 < "${DIR}/patches/arm-webrtc-fix.patch"
-if [ ! -f ${DIR}/testing ] ; then
-	patch -p0 < "${DIR}/patches/skia.patch"
-fi
+	#chrome_version="32.0.1700.76"
+	#patch -p0 < "${DIR}/patches/skia.patch"
 }
 
 build_chrome () {
-if [ -f ${DIR}/testing ] ; then
+	#chrome_version="32.0.1700.76"
 	sudo mount -t tmpfs shmfs -o size=256M /dev/shm
-fi
 
 	cd /opt/chrome-src/src/
 	echo "Building with: [${GYP_DEFINES}]"
@@ -383,9 +379,9 @@ fi
 	#test via:
 	#sudo chown root:root chrome_sandbox && sudo chmod 4755 chrome_sandbox && export CHROME_DEVEL_SANDBOX="$PWD/chrome_sandbox"
 	#./chrome
-if [ -f ${DIR}/testing ] ; then
+
+	#chrome_version="32.0.1700.76"
 	sudo umount -l /dev/shm || true
-fi
 }
 
 package_chrome () {
