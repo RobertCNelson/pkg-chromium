@@ -354,6 +354,10 @@ patch_chrome () {
 }
 
 build_chrome () {
+	if [ ! -d /run/shm ] ; then
+		mkdir -p /run/shm
+	fi
+
 	#chrome_version="32.0.1700.76"
 	sudo mount -t tmpfs shmfs -o size=256M /dev/shm
 
