@@ -347,7 +347,10 @@ patch_chrome () {
 	cd /opt/chrome-src/src/
 
 	#https://code.launchpad.net/~chromium-team/chromium-browser/trusty-working
-	patch -p1 < "${DIR}/patches/arm-crypto.patch"
+
+	#chrome_version="33.0.1750.112"
+	#patch -p1 < "${DIR}/patches/arm-crypto.patch"
+
 	patch -p2 < "${DIR}/patches/third-party-cookies-off-by-default.patch"
 	patch -p2 < "${DIR}/patches/arm.patch"
 
