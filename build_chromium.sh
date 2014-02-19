@@ -50,8 +50,7 @@ check_dependencies () {
 	check_dpkg
 	pkg="libgtk2.0-dev"
 	check_dpkg
-	pkg="libnss3-dev"
-	check_dpkg
+
 	pkg="libgconf2-dev"
 	check_dpkg
 	pkg="libgcrypt11-dev"
@@ -87,6 +86,10 @@ check_dependencies () {
 	pkg="libcap-dev:${deb_arch}"
 	check_dpkg
 
+	#chrome_version="33.0.1750.112"
+	pkg="jython"
+	check_dpkg
+
 	deb_distro=$(lsb_release -cs | sed 's/\//_/g')
 	case "${deb_distro}" in
 	wheezy)
@@ -101,6 +104,8 @@ check_dependencies () {
 		#pkg="g++-4.7"
 		#check_dpkg
 
+		pkg="libnss3-dev"
+		check_dpkg
 		pkg="libsqlite3-dev"
 		check_dpkg
 		pkg="libxslt1-dev"
@@ -119,6 +124,8 @@ check_dependencies () {
 		pkg="libdrm-dev:${deb_arch}"
 		check_dpkg
 
+		pkg="libnss3-dev:${deb_arch}"
+		check_dpkg
 		pkg="libsqlite3-dev:${deb_arch}"
 		check_dpkg
 		pkg="libxslt1-dev:${deb_arch}"
@@ -356,6 +363,9 @@ patch_chrome () {
 
 	#chrome_version="32.0.1700.76"
 	#patch -p0 < "${DIR}/patches/skia.patch"
+
+	#chrome_version="33.0.1750.112"
+	patch -p1 < "${DIR}/patches/fix-build-gyp_chromium-rungn.patch"
 }
 
 build_chrome () {

@@ -22,8 +22,8 @@
 
 DIR=$PWD
 
-chrome_version_original="32.0.1700.76"
-chrome_version_delta="32.0.1700.102"
+chrome_version_original="32.0.1700.102"
+chrome_version_delta="33.0.1750.112"
 
 dl_chrome () {
 	if [ ! -d /opt/chrome-src/ ] ; then
@@ -34,19 +34,20 @@ dl_chrome () {
 	cd /opt/chrome-src/
 	wget -c http://gsdview.appspot.com/chromium-browser-official/chromium-${chrome_version_original}.tar.xz
 	wget -c http://gsdview.appspot.com/chromium-browser-official/chromium-${chrome_version_delta}.tar.xz
-	if [ -d /opt/chrome-src/src/ ] ; then
-		rm -rf /opt/chrome-src/src/ || true
+	if [ -d /opt/chrome-src/delta/ ] ; then
+		rm -rf /opt/chrome-src/delta/ || true
 	fi
 	tar xf chromium-${chrome_version_original}.tar.xz
 	tar xf chromium-${chrome_version_delta}.tar.xz
-	mv /opt/chrome-src/chromium-${chrome_version_original} /opt/chrome-src/src/
-	cd /opt/chrome-src/src/
+	mv /opt/chrome-src/chromium-${chrome_version_original} /opt/chrome-src/delta/
+	cd /opt/chrome-src/delta/
 	git init .
 	echo "*.xtb" > .gitignore
+	echo "*.png" >> .gitignore
 	git add --all
 	git commit --allow-empty -a -m 'original'
 	cd /opt/chrome-src/
-	cp -r /opt/chrome-src/chromium-${chrome_version_delta}/* /opt/chrome-src/src/
+	cp -r /opt/chrome-src/chromium-${chrome_version_delta}/* /opt/chrome-src/delta/
 }
 
 dl_chrome

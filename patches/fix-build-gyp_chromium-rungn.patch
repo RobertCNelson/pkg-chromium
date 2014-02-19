@@ -1,0 +1,15 @@
+diff --git a/build/gyp_chromium b/build/gyp_chromium
+index e8aee14..3b10667 100755
+--- a/build/gyp_chromium
++++ b/build/gyp_chromium
+@@ -245,8 +245,8 @@ if __name__ == '__main__':
+ 
+   supplemental_includes = GetSupplementalFiles()
+ 
+-  if not RunGN(supplemental_includes):
+-    sys.exit(1)
++#  if not RunGN(supplemental_includes):
++#    sys.exit(1)
+ 
+   args.extend(
+       ['-I' + i for i in additional_include_files(supplemental_includes, args)])
