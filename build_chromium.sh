@@ -25,7 +25,8 @@ DIR=$PWD
 #http://gsdview.appspot.com/chromium-browser-official/
 #chrome_version="31.0.1650.69"
 #chrome_version="32.0.1700.76"
-chrome_version="32.0.1700.102"
+#chrome_version="32.0.1700.102"
+chrome_version="33.0.1750.115"
 unset use_testing
 if [ -f ${DIR}/testing ] ; then
 	chrome_version="33.0.1750.27"
