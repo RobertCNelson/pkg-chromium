@@ -31,6 +31,7 @@ DIR=$PWD
 #chrome_version="33.0.1750.117"
 #chrome_version="33.0.1750.146"
 chrome_version="33.0.1750.149"
+#chrome_version="34.0.1847.116"
 unset use_testing
 if [ -f ${DIR}/testing ] ; then
 	chrome_version="33.0.1750.27"
@@ -49,8 +50,6 @@ check_dependencies () {
 	pkg="build-essential"
 	check_dpkg
 	pkg="gperf"
-	check_dpkg
-	pkg="libcups2-dev"
 	check_dpkg
 	pkg="libgtk2.0-dev"
 	check_dpkg
@@ -94,10 +93,15 @@ check_dependencies () {
 	pkg="jython"
 	check_dpkg
 
+	#chrome_version="34.0.1847.116"
+	pkg="libexif-dev"
+	check_dpkg
+
 	deb_distro=$(lsb_release -cs | sed 's/\//_/g')
 	case "${deb_distro}" in
 	wheezy)
-
+		pkg="libcups2-dev"
+		check_dpkg
 		#chrome_version="32.0.1700.76"
 		pkg="libdrm-dev"
 		check_dpkg
@@ -124,6 +128,8 @@ check_dependencies () {
 		fi
 		;;
 	jessie|sid)
+		pkg="libcups2-dev:${deb_arch}"
+		check_dpkg
 		#chrome_version="32.0.1700.76"
 		pkg="libdrm-dev:${deb_arch}"
 		check_dpkg
