@@ -30,8 +30,10 @@ DIR=$PWD
 #chrome_version="33.0.1750.115"
 #chrome_version="33.0.1750.117"
 #chrome_version="33.0.1750.146"
-chrome_version="33.0.1750.149"
+#chrome_version="33.0.1750.149"
 #chrome_version="34.0.1847.116"
+chrome_version="35.0.1916.114"
+
 unset use_testing
 if [ -f ${DIR}/testing ] ; then
 	chrome_version="33.0.1750.27"
@@ -106,6 +108,9 @@ check_dependencies () {
 		pkg="libdrm-dev"
 		check_dpkg
 
+		pkg="libkrb5-dev"
+		check_dpkg
+
 		#testing...
 		#pkg="gcc-4.7"
 		#check_dpkg
@@ -132,6 +137,9 @@ check_dependencies () {
 		check_dpkg
 		#chrome_version="32.0.1700.76"
 		pkg="libdrm-dev:${deb_arch}"
+		check_dpkg
+
+		pkg="libkrb5-dev:${deb_arch}"
 		check_dpkg
 
 		pkg="libnss3-dev:${deb_arch}"
@@ -375,7 +383,7 @@ patch_chrome () {
 	#patch -p0 < "${DIR}/patches/skia.patch"
 
 	#chrome_version="33.0.1750.112"
-	patch -p1 < "${DIR}/patches/fix-build-gyp_chromium-rungn.patch"
+	#patch -p1 < "${DIR}/patches/fix-build-gyp_chromium-rungn.patch"
 }
 
 build_chrome () {
