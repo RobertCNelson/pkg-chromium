@@ -315,18 +315,7 @@ build_chrome () {
 
 	cd /opt/chrome-src/src/
 
-	deb_distro=$(lsb_release -cs | sed 's/\//_/g')
-	#case "${deb_distro}" in
-	#wheezy)
-	#if [ -f ${DIR}/testing ] ; then
-	#	export CXX=g++-4.7
-	#	export CC=gcc-4.7
-#
-	#	export CXX_host=g++-4.7
-	#	export CC_host=gcc-4.7
-	#fi
-	#	;;
-	#esac
+	echo "GYP_DEFINES=\"${defines}\""
 
 	GYP_DEFINES="${defines}" ./build/gyp_chromium
 
