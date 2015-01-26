@@ -319,6 +319,10 @@ build_chrome () {
 
 	echo "GYP_DEFINES=\"${defines}\""
 
+	mkdir -p ./third_party/llvm-build/Release+Asserts/bin/
+	ln -s /usr/bin/clang-3.5 ./third_party/llvm-build/Release+Asserts/bin/clang
+	ln -s /usr/bin/clang++-3.5 ./third_party/llvm-build/Release+Asserts/bin/clang++
+
 	GYP_DEFINES="${defines}" ./build/gyp_chromium
 
 	ninja -C out/Release chrome chrome_sandbox chromedriver
