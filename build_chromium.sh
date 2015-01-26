@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/bash -e
 #
 # Copyright (c) 2014-2015 Robert Nelson <robertcnelson@gmail.com>
 #
@@ -55,9 +55,9 @@ check_dependencies () {
 	check_dpkg
 	pkg="libpci-dev"
 	check_dpkg
-	pkg="libspeechd-dev"
+	pkg="libkrb5-dev"
 	check_dpkg
-	pkg="libudev-dev"
+	pkg="libspeechd-dev"
 	check_dpkg
 	pkg="pkg-config"
 	check_dpkg
@@ -66,6 +66,8 @@ check_dependencies () {
 
 	deb_arch=$(LC_ALL=C dpkg --print-architecture)
 	pkg="libasound2-dev:${deb_arch}"
+	check_dpkg
+	pkg="libudev-dev:${deb_arch}"
 	check_dpkg
 	pkg="libpulse-dev:${deb_arch}"
 	check_dpkg
@@ -90,45 +92,11 @@ check_dependencies () {
 
 	deb_distro=$(lsb_release -cs | sed 's/\//_/g')
 	case "${deb_distro}" in
-	wheezy)
-		pkg="libcups2-dev"
-		check_dpkg
-		#chrome_version="32.0.1700.76"
-		pkg="libdrm-dev"
-		check_dpkg
-
-		pkg="libkrb5-dev"
-		check_dpkg
-
-		#testing...
-		#pkg="gcc-4.7"
-		#check_dpkg
-		#pkg="g++-4.7"
-		#check_dpkg
-
-		pkg="libnss3-dev"
-		check_dpkg
-		pkg="libsqlite3-dev"
-		check_dpkg
-		pkg="libxslt1-dev"
-		check_dpkg
-		if [ ! -f /usr/local/bin/ninja ] ; then
-			mkdir -p /tmp/ninja
-			git clone git://github.com/martine/ninja.git /tmp/ninja
-			cd /tmp/ninja
-			git checkout release
-			./bootstrap.py
-			sudo cp -v ./ninja /usr/local/bin/
-		fi
-		;;
 	jessie|sid)
 		pkg="libcups2-dev:${deb_arch}"
 		check_dpkg
 		#chrome_version="32.0.1700.76"
 		pkg="libdrm-dev:${deb_arch}"
-		check_dpkg
-
-		pkg="libkrb5-dev:${deb_arch}"
 		check_dpkg
 
 		pkg="libnss3-dev:${deb_arch}"
