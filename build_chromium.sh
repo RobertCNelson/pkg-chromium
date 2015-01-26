@@ -1,6 +1,6 @@
 #!/bin/sh -e
 #
-# Copyright (c) 2014 Robert Nelson <robertcnelson@gmail.com>
+# Copyright (c) 2014-2015 Robert Nelson <robertcnelson@gmail.com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -23,22 +23,13 @@
 DIR=$PWD
 
 #http://gsdview.appspot.com/chromium-browser-official/
-#chrome_version="31.0.1650.69"
-#chrome_version="32.0.1700.76"
-#chrome_version="32.0.1700.102"
-#chrome_version="33.0.1750.112"
-#chrome_version="33.0.1750.115"
-#chrome_version="33.0.1750.117"
-#chrome_version="33.0.1750.146"
-#chrome_version="33.0.1750.149"
-#chrome_version="34.0.1847.116"
-chrome_version="35.0.1916.114"
+chrome_version="40.0.2214.91"
 
 unset use_testing
 if [ -f ${DIR}/testing ] ; then
-	chrome_version="33.0.1750.27"
+	chrome_version="40.0.2214.91"
 	use_testing=enable
-	testing_label="33"
+	testing_label="40"
 fi
 
 check_dpkg () {
@@ -75,8 +66,6 @@ check_dependencies () {
 
 	deb_arch=$(LC_ALL=C dpkg --print-architecture)
 	pkg="libasound2-dev:${deb_arch}"
-	check_dpkg
-	pkg="libjpeg8-dev:${deb_arch}"
 	check_dpkg
 	pkg="libpulse-dev:${deb_arch}"
 	check_dpkg
@@ -162,195 +151,157 @@ check_dependencies () {
 }
 
 set_testing_defines () {
-	#http://anonscm.debian.org/gitweb/?p=pkg-chromium/pkg-chromium.git;a=blob_plain;f=debian/rules;hb=HEAD
+# treat all warnings as errors
+defines=werror=
 
-	# Disable SSE2
-	GYP_DEFINES="disable_sse2=1"
+# use clang instead of gcc
+defines+=clang=1
+defines+=clang_use_chrome_plugins=
 
-	#Debian Chromium Api Key
-	#GYP_DEFINES="${GYP_DEFINES} google_api_key=''"
-	#GYP_DEFINES="${GYP_DEFINES} google_default_client_id=''"
-	#GYP_DEFINES="${GYP_DEFINES} google_default_client_secret=''"
+# disabled features
+defines+=use_ozone=0 \
+         use_gconf=0 \
+         use_allocator=none \
+         linux_breakpad=0 \
+         linux_use_libgps=0 \
+         linux_use_gold_flags=0 \
+         linux_use_bundled_gold=0 \
+         linux_use_bundled_binutils=0 \
+         remoting=0 \
+         disable_nacl=1 \
+         enable_remoting_host=0 \
 
-	# Enable all codecs for HTML5 in chromium, depending on which ffmpeg sumo lib
-	# is installed, the set of usable codecs (at runtime) will still vary
-	GYP_DEFINES="${GYP_DEFINES} proprietary_codecs=1"
+# enabled features
+defines+=enable_webrtc=1 \
+         use_gio=1 \
+         use_pulseaudio=1 \
+         use_gnome_keyring=1 \
+         linux_link_libpci=1 \
+         linux_link_gsettings=1 \
+         linux_link_libspeechd=1 \
+         linux_link_gnome_keyring=1 \
 
-	# enable compile-time dependency on gnome-keyring
-	GYP_DEFINES="${GYP_DEFINES} use_gnome_keyring=1 linux_link_gnome_keyring=1"
+# system libraries to use
+defines+=use_system_re2=1 \
+         use_system_yasm=1 \
+         use_system_opus=1 \
+         use_system_zlib=1 \
+         use_system_speex=1 \
+         use_system_expat=1 \
+         use_system_snappy=1 \
+         use_system_libpng=1 \
+         use_system_libxml=1 \
+         use_system_libjpeg=1 \
+         use_system_libwebp=1 \
+         use_system_libxslt=1 \
+         use_system_libsrtp=1 \
+         use_system_jsoncpp=1 \
+         use_system_libevent=1 \
+         use_system_harfbuzz=1 \
+         use_system_xdg_utils=1 \
 
-	# controlling the use of GConf (the classic GNOME configuration
-	# and GIO, which contains GSettings (the new GNOME config system)
-	GYP_DEFINES="${GYP_DEFINES} use_gconf=1 use_gio=1"
+# enable proprietary codecs
+defines+=proprietary_codecs=1 \
+         ffmpeg_branding=Chrome \
 
-	# disable native client (nacl)
-	GYP_DEFINES="${GYP_DEFINES} disable_nacl=1"
+# use embedded protobuf for now (bug #764911)
+defines+=use_system_protobuf=0 \
 
-	# do not use embedded third_party/gold as the linker.
-	GYP_DEFINES="${GYP_DEFINES} linux_use_gold_binary=0 linux_use_gold_flags=0"
+# icu
+defines+=use_system_icu=0 \
+         #icu_use_data_file_flag=0 \
+         #want_separate_host_toolset=0 \
 
-	# disable tcmalloc
-	GYP_DEFINES="${GYP_DEFINES} linux_use_tcmalloc=0"
+defines+=sysroot=/ \
+         target_arch=arm \
+         use_cups=1 \
+         arm_version=7 \
+         arm_neon=1 \
+         arm_float_abi=hard \
+         arm_thumb=1 \
+         library=shared_library
 
-	# Use explicit library dependencies instead of dlopen.
-	# This makes breakages easier to detect by revdep-rebuild.
-	GYP_DEFINES="${GYP_DEFINES} linux_link_gsettings=1"
+defines+=enable_background=0 \
+         enable_google_now=0 \
+         enable_hangout_services_extension=0
 
-	GYP_DEFINES="${GYP_DEFINES} disable_nacl=1"
-	GYP_DEFINES="${GYP_DEFINES} linux_use_tcmalloc=0"
-	GYP_DEFINES="${GYP_DEFINES} enable_webrtc=1"
-	GYP_DEFINES="${GYP_DEFINES} use_cups=1"
-
-	if [ "x${deb_arch}" = "xarmhf" ] ; then
-		GYP_DEFINES="${GYP_DEFINES} sysroot=/"
-		GYP_DEFINES="${GYP_DEFINES} target_arch=arm"
-		GYP_DEFINES="${GYP_DEFINES} -DUSE_EABI_HARDFLOAT"
-		GYP_DEFINES="${GYP_DEFINES} v8_use_arm_eabi_hardfloat=true"
-		#GYP_DEFINES="${GYP_DEFINES} arm_fpu=vfpv3"
-		GYP_DEFINES="${GYP_DEFINES} arm_fpu=neon"
-		GYP_DEFINES="${GYP_DEFINES} arm_float_abi=hard"
-		GYP_DEFINES="${GYP_DEFINES} arm_thumb=0"
-		GYP_DEFINES="${GYP_DEFINES} armv7=1"
-		GYP_DEFINES="${GYP_DEFINES} arm_neon=1"
-	fi
-
-	GYP_DEFINES="${GYP_DEFINES} library=shared_library"
-
-	# Always ignore compiler warnings
-	GYP_DEFINES="${GYP_DEFINES} werror="
-
-	# FFmpeg-mt
-	#ifeq (1,$(USE_SYSTEM_FFMPEG))
-	#GYP_DEFINES="${GYP_DEFINES} build_ffmpegsumo=0"
-	#else
-	GYP_DEFINES="${GYP_DEFINES} ffmpeg_branding=Chrome"
-	#endif
-
-	#$USE_SYSTEM_LIBWEBP := $(shell pkg-config 'libwebp >= 0.3.0' && echo 1 || echo 0)
-	#USE_SYSTEM_LIBWEBP := 0
-
-	# System libs
-	#GYP_DEFINES="${GYP_DEFINES} use_system_bzip2=1"
-	#GYP_DEFINES="${GYP_DEFINES} use_system_libjpeg=1"
-	#GYP_DEFINES="${GYP_DEFINES} use_system_libpng=1"
-	#sqlite3 >= 3.6.1
-	#fails with jessie: 31.0.1650.69
-	#GYP_DEFINES="${GYP_DEFINES} use_system_sqlite=1"
-	#GYP_DEFINES="${GYP_DEFINES} use_system_libxml=1"
-	#GYP_DEFINES="${GYP_DEFINES} use_system_libxslt=1"
-	#GYP_DEFINES="${GYP_DEFINES} use_system_zlib=1"
-	#GYP_DEFINES="${GYP_DEFINES} use_system_libevent=1"
-	#GYP_DEFINES="${GYP_DEFINES} use_system_icu=0"
-	#GYP_DEFINES="${GYP_DEFINES} use_system_yasm=1"
-	#GYP_DEFINES="${GYP_DEFINES} use_system_ffmpeg=$(USE_SYSTEM_FFMPEG)"
-	#GYP_DEFINES="${GYP_DEFINES} use_system_libvpx=1"
-	#GYP_DEFINES="${GYP_DEFINES} use_system_xdg_utils=1"
-	#GYP_DEFINES="${GYP_DEFINES} use_system_flac=1"
-	#GYP_DEFINES="${GYP_DEFINES} use_system_libwebp=$(USE_SYSTEM_LIBWEBP)"
-	#GYP_DEFINES="${GYP_DEFINES} use_system_speex=1"
-	#GYP_DEFINES="${GYP_DEFINES} linux_link_libspeechd=1"
-
-	# Use pulseaudio
-	GYP_DEFINES="${GYP_DEFINES} use_pulseaudio=1"
-
-	# strip binary
-	GYP_DEFINES="${GYP_DEFINES} linux_strip_binary=1"
 }
 
 set_stable_defines () {
-	#http://anonscm.debian.org/gitweb/?p=pkg-chromium/pkg-chromium.git;a=blob_plain;f=debian/rules;hb=HEAD
+# treat all warnings as errors
+defines=werror=
 
-	# Disable SSE2
-	GYP_DEFINES="disable_sse2=1"
+# use clang instead of gcc
+defines+=clang=1
+defines+=clang_use_chrome_plugins=
 
-	#Debian Chromium Api Key
-	#GYP_DEFINES="${GYP_DEFINES} google_api_key=''"
-	#GYP_DEFINES="${GYP_DEFINES} google_default_client_id=''"
-	#GYP_DEFINES="${GYP_DEFINES} google_default_client_secret=''"
+# disabled features
+defines+=use_ozone=0 \
+         use_gconf=0 \
+         use_allocator=none \
+         linux_breakpad=0 \
+         linux_use_libgps=0 \
+         linux_use_gold_flags=0 \
+         linux_use_bundled_gold=0 \
+         linux_use_bundled_binutils=0 \
+         remoting=0 \
+         disable_nacl=1 \
+         enable_remoting_host=0 \
 
-	# Enable all codecs for HTML5 in chromium, depending on which ffmpeg sumo lib
-	# is installed, the set of usable codecs (at runtime) will still vary
-	GYP_DEFINES="${GYP_DEFINES} proprietary_codecs=1"
+# enabled features
+defines+=enable_webrtc=1 \
+         use_gio=1 \
+         use_pulseaudio=1 \
+         use_gnome_keyring=1 \
+         linux_link_libpci=1 \
+         linux_link_gsettings=1 \
+         linux_link_libspeechd=1 \
+         linux_link_gnome_keyring=1 \
 
-	# enable compile-time dependency on gnome-keyring
-	GYP_DEFINES="${GYP_DEFINES} use_gnome_keyring=1 linux_link_gnome_keyring=1"
+# system libraries to use
+defines+=use_system_re2=1 \
+         use_system_yasm=1 \
+         use_system_opus=1 \
+         use_system_zlib=1 \
+         use_system_speex=1 \
+         use_system_expat=1 \
+         use_system_snappy=1 \
+         use_system_libpng=1 \
+         use_system_libxml=1 \
+         use_system_libjpeg=1 \
+         use_system_libwebp=1 \
+         use_system_libxslt=1 \
+         use_system_libsrtp=1 \
+         use_system_jsoncpp=1 \
+         use_system_libevent=1 \
+         use_system_harfbuzz=1 \
+         use_system_xdg_utils=1 \
 
-	# controlling the use of GConf (the classic GNOME configuration
-	# and GIO, which contains GSettings (the new GNOME config system)
-	GYP_DEFINES="${GYP_DEFINES} use_gconf=1 use_gio=1"
+# enable proprietary codecs
+defines+=proprietary_codecs=1 \
+         ffmpeg_branding=Chrome \
 
-	# disable native client (nacl)
-	GYP_DEFINES="${GYP_DEFINES} disable_nacl=1"
+# use embedded protobuf for now (bug #764911)
+defines+=use_system_protobuf=0 \
 
-	# do not use embedded third_party/gold as the linker.
-	GYP_DEFINES="${GYP_DEFINES} linux_use_gold_binary=0 linux_use_gold_flags=0"
+# icu
+defines+=use_system_icu=0 \
+         #icu_use_data_file_flag=0 \
+         #want_separate_host_toolset=0 \
 
-	# disable tcmalloc
-	GYP_DEFINES="${GYP_DEFINES} linux_use_tcmalloc=0"
+defines+=sysroot=/ \
+         target_arch=arm \
+         use_cups=1 \
+         arm_version=7 \
+         arm_neon=1 \
+         arm_float_abi=hard \
+         arm_thumb=1 \
+         library=shared_library
 
-	# Use explicit library dependencies instead of dlopen.
-	# This makes breakages easier to detect by revdep-rebuild.
-	GYP_DEFINES="${GYP_DEFINES} linux_link_gsettings=1"
+defines+=enable_background=0 \
+         enable_google_now=0 \
+         enable_hangout_services_extension=0
 
-	GYP_DEFINES="${GYP_DEFINES} disable_nacl=1"
-	GYP_DEFINES="${GYP_DEFINES} linux_use_tcmalloc=0"
-	GYP_DEFINES="${GYP_DEFINES} enable_webrtc=1"
-	GYP_DEFINES="${GYP_DEFINES} use_cups=1"
-
-	if [ "x${deb_arch}" = "xarmhf" ] ; then
-		GYP_DEFINES="${GYP_DEFINES} sysroot=/"
-		GYP_DEFINES="${GYP_DEFINES} target_arch=arm"
-		GYP_DEFINES="${GYP_DEFINES} -DUSE_EABI_HARDFLOAT"
-		GYP_DEFINES="${GYP_DEFINES} v8_use_arm_eabi_hardfloat=true"
-		#GYP_DEFINES="${GYP_DEFINES} arm_fpu=vfpv3"
-		GYP_DEFINES="${GYP_DEFINES} arm_fpu=neon"
-		GYP_DEFINES="${GYP_DEFINES} arm_float_abi=hard"
-		GYP_DEFINES="${GYP_DEFINES} arm_thumb=0"
-		GYP_DEFINES="${GYP_DEFINES} armv7=1"
-		GYP_DEFINES="${GYP_DEFINES} arm_neon=1"
-	fi
-
-	GYP_DEFINES="${GYP_DEFINES} library=shared_library"
-
-	# Always ignore compiler warnings
-	GYP_DEFINES="${GYP_DEFINES} werror="
-
-	# FFmpeg-mt
-	#ifeq (1,$(USE_SYSTEM_FFMPEG))
-	#GYP_DEFINES="${GYP_DEFINES} build_ffmpegsumo=0"
-	#else
-	GYP_DEFINES="${GYP_DEFINES} ffmpeg_branding=Chrome"
-	#endif
-
-	#$USE_SYSTEM_LIBWEBP := $(shell pkg-config 'libwebp >= 0.3.0' && echo 1 || echo 0)
-	#USE_SYSTEM_LIBWEBP := 0
-
-	## System libs
-	#GYP_DEFINES="${GYP_DEFINES} use_system_bzip2=1"
-	#GYP_DEFINES="${GYP_DEFINES} use_system_libjpeg=1"
-	#GYP_DEFINES="${GYP_DEFINES} use_system_libpng=1"
-	##sqlite3 >= 3.6.1
-	##fails with jessie: 31.0.1650.69
-	##GYP_DEFINES="${GYP_DEFINES} use_system_sqlite=1"
-	#GYP_DEFINES="${GYP_DEFINES} use_system_libxml=1"
-	#GYP_DEFINES="${GYP_DEFINES} use_system_libxslt=1"
-	#GYP_DEFINES="${GYP_DEFINES} use_system_zlib=1"
-	#GYP_DEFINES="${GYP_DEFINES} use_system_libevent=1"
-	#GYP_DEFINES="${GYP_DEFINES} use_system_icu=0"
-	#GYP_DEFINES="${GYP_DEFINES} use_system_yasm=1"
-	##GYP_DEFINES="${GYP_DEFINES} use_system_ffmpeg=$(USE_SYSTEM_FFMPEG)"
-	#GYP_DEFINES="${GYP_DEFINES} use_system_libvpx=1"
-	#GYP_DEFINES="${GYP_DEFINES} use_system_xdg_utils=1"
-	#GYP_DEFINES="${GYP_DEFINES} use_system_flac=1"
-	##GYP_DEFINES="${GYP_DEFINES} use_system_libwebp=$(USE_SYSTEM_LIBWEBP)"
-	#GYP_DEFINES="${GYP_DEFINES} use_system_speex=1"
-	#GYP_DEFINES="${GYP_DEFINES} linux_link_libspeechd=1"
-
-	# Use pulseaudio
-	GYP_DEFINES="${GYP_DEFINES} use_pulseaudio=1"
-
-	# strip binary
-	GYP_DEFINES="${GYP_DEFINES} linux_strip_binary=1"
 }
 
 dl_chrome () {
@@ -376,8 +327,8 @@ patch_chrome () {
 	#chrome_version="33.0.1750.112"
 	#patch -p1 < "${DIR}/patches/arm-crypto.patch"
 
-	patch -p2 < "${DIR}/patches/third-party-cookies-off-by-default.patch"
-	patch -p2 < "${DIR}/patches/arm.patch"
+	#patch -p2 < "${DIR}/patches/third-party-cookies-off-by-default.patch"
+	#patch -p2 < "${DIR}/patches/arm.patch"
 
 	#chrome_version="32.0.1700.76"
 	#patch -p0 < "${DIR}/patches/skia.patch"
@@ -395,8 +346,6 @@ build_chrome () {
 	sudo mount -t tmpfs shmfs -o size=256M /dev/shm
 
 	cd /opt/chrome-src/src/
-	echo "Building with: [${GYP_DEFINES}]"
-	export GYP_DEFINES="${GYP_DEFINES}"
 
 	deb_distro=$(lsb_release -cs | sed 's/\//_/g')
 	#case "${deb_distro}" in
@@ -411,8 +360,9 @@ build_chrome () {
 	#	;;
 	#esac
 
-	./build/gyp_chromium
-	ninja -C out/Release chrome chrome_sandbox
+	GYP_DEFINES="${defines}" ./build/gyp_chromium
+
+	ninja -C out/Release chrome chrome_sandbox chromedriver
 	#test via:
 	#sudo chown root:root chrome_sandbox && sudo chmod 4755 chrome_sandbox && export CHROME_DEVEL_SANDBOX="$PWD/chrome_sandbox"
 	#./chrome
