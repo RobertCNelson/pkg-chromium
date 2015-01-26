@@ -42,6 +42,8 @@ check_dependencies () {
 	check_dpkg
 	pkg="build-essential"
 	check_dpkg
+	pkg="clang"
+	check_dpkg
 	pkg="gperf"
 	check_dpkg
 	pkg="libgtk2.0-dev"
