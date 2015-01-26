@@ -120,14 +120,14 @@ check_dependencies () {
 
 set_testing_defines () {
 # treat all warnings as errors
-defines=werror=
+defines="werror= "
 
 # use clang instead of gcc
-defines+=clang=1
-defines+=clang_use_chrome_plugins=
+defines+="clang=1 "
+defines+="clang_use_chrome_plugins= "
 
 # disabled features
-defines+=use_ozone=0 \
+defines+="use_ozone=0 \
          use_gconf=0 \
          use_allocator=none \
          linux_breakpad=0 \
@@ -137,20 +137,20 @@ defines+=use_ozone=0 \
          linux_use_bundled_binutils=0 \
          remoting=0 \
          disable_nacl=1 \
-         enable_remoting_host=0 \
+         enable_remoting_host=0 "
 
 # enabled features
-defines+=enable_webrtc=1 \
+defines+="enable_webrtc=1 \
          use_gio=1 \
          use_pulseaudio=1 \
          use_gnome_keyring=1 \
          linux_link_libpci=1 \
          linux_link_gsettings=1 \
          linux_link_libspeechd=1 \
-         linux_link_gnome_keyring=1 \
+         linux_link_gnome_keyring=1 "
 
 # system libraries to use
-defines+=use_system_re2=1 \
+defines+="use_system_re2=1 \
          use_system_yasm=1 \
          use_system_opus=1 \
          use_system_zlib=1 \
@@ -166,45 +166,45 @@ defines+=use_system_re2=1 \
          use_system_jsoncpp=1 \
          use_system_libevent=1 \
          use_system_harfbuzz=1 \
-         use_system_xdg_utils=1 \
+         use_system_xdg_utils=1 "
 
 # enable proprietary codecs
-defines+=proprietary_codecs=1 \
-         ffmpeg_branding=Chrome \
+defines+="proprietary_codecs=1 \
+         ffmpeg_branding=Chrome "
 
 # use embedded protobuf for now (bug #764911)
-defines+=use_system_protobuf=0 \
+defines+="use_system_protobuf=0 "
 
 # icu
-defines+=use_system_icu=0 \
+defines+="use_system_icu=0 "
          #icu_use_data_file_flag=0 \
          #want_separate_host_toolset=0 \
 
-defines+=sysroot=/ \
+defines+="sysroot=/ \
          target_arch=arm \
          use_cups=1 \
          arm_version=7 \
          arm_neon=1 \
          arm_float_abi=hard \
          arm_thumb=1 \
-         library=shared_library
+         library=shared_library "
 
-defines+=enable_background=0 \
+defines+="enable_background=0 \
          enable_google_now=0 \
-         enable_hangout_services_extension=0
+         enable_hangout_services_extension=0 "
 
 }
 
 set_stable_defines () {
 # treat all warnings as errors
-defines=werror=
+defines="werror= "
 
 # use clang instead of gcc
-defines+=clang=1
-defines+=clang_use_chrome_plugins=
+defines+="clang=1 "
+defines+="clang_use_chrome_plugins= "
 
 # disabled features
-defines+=use_ozone=0 \
+defines+="use_ozone=0 \
          use_gconf=0 \
          use_allocator=none \
          linux_breakpad=0 \
@@ -214,20 +214,20 @@ defines+=use_ozone=0 \
          linux_use_bundled_binutils=0 \
          remoting=0 \
          disable_nacl=1 \
-         enable_remoting_host=0 \
+         enable_remoting_host=0 "
 
 # enabled features
-defines+=enable_webrtc=1 \
+defines+="enable_webrtc=1 \
          use_gio=1 \
          use_pulseaudio=1 \
          use_gnome_keyring=1 \
          linux_link_libpci=1 \
          linux_link_gsettings=1 \
          linux_link_libspeechd=1 \
-         linux_link_gnome_keyring=1 \
+         linux_link_gnome_keyring=1 "
 
 # system libraries to use
-defines+=use_system_re2=1 \
+defines+="use_system_re2=1 \
          use_system_yasm=1 \
          use_system_opus=1 \
          use_system_zlib=1 \
@@ -243,32 +243,32 @@ defines+=use_system_re2=1 \
          use_system_jsoncpp=1 \
          use_system_libevent=1 \
          use_system_harfbuzz=1 \
-         use_system_xdg_utils=1 \
+         use_system_xdg_utils=1 "
 
 # enable proprietary codecs
-defines+=proprietary_codecs=1 \
-         ffmpeg_branding=Chrome \
+defines+="proprietary_codecs=1 \
+         ffmpeg_branding=Chrome "
 
 # use embedded protobuf for now (bug #764911)
-defines+=use_system_protobuf=0 \
+defines+="use_system_protobuf=0 "
 
 # icu
-defines+=use_system_icu=0 \
+defines+="use_system_icu=0 "
          #icu_use_data_file_flag=0 \
          #want_separate_host_toolset=0 \
 
-defines+=sysroot=/ \
+defines+="sysroot=/ \
          target_arch=arm \
          use_cups=1 \
          arm_version=7 \
          arm_neon=1 \
          arm_float_abi=hard \
          arm_thumb=1 \
-         library=shared_library
+         library=shared_library "
 
-defines+=enable_background=0 \
+defines+="enable_background=0 \
          enable_google_now=0 \
-         enable_hangout_services_extension=0
+         enable_hangout_services_extension=0 "
 
 }
 
